@@ -96,7 +96,6 @@ def build_index(
 
     if isinstance(input_source, AzureAISearchSource):
         return _create_mlindex_from_existing_ai_search(
-            # TODO: Fix Bug 2818331
             name=name,
             embedding_model_uri=embeddings_model_uri,
             is_serverless_connection=is_serverless_connection,
@@ -309,13 +308,22 @@ def _create_mlindex_from_existing_ai_search(
     else:
         if not connection_id:
             import openai
+            import os
+            from packaging import version
 
+            api_key = "OPENAI_API_KEY"
+            api_base = "OPENAI_API_BASE"
+            if version.parse(openai.version.VERSION) >= version.parse("1.0.0"):
+                api_key = "AZURE_OPENAI_KEY"
+                api_base = "AZURE_OPENAI_ENDPOINT"
             model_connection_args = {
-                "key": openai.api_key,
+                "connection_type": "environment",
+                "connection": {"key": api_key},
+                "endpoint": os.getenv(api_base),
             }
         else:
             model_connection_args = {"connection_type": "workspace_connection", "connection": {"id": connection_id}}
-        embedding = EmbeddingsContainer.from_uri(embedding_model_uri, credential=None, **model_connection_args)
+        embedding = EmbeddingsContainer.from_uri(embedding_model_uri, **model_connection_args)
     mlindex_config["embeddings"] = embedding.get_metadata()
 
     path = Path.cwd() / f"{name}-mlindex"
