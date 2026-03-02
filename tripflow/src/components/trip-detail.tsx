@@ -21,6 +21,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Timeline } from "@/components/timeline";
 import { ExpenseTab } from "@/components/expense-tab";
+import { ShareTab } from "@/components/share-tab";
 
 interface TripDetailProps {
   trip: {
@@ -337,9 +338,11 @@ export function TripDetail({ trip: initialTrip }: TripDetailProps) {
         </TabsContent>
 
         <TabsContent value="share">
-          <div className="text-center py-12 text-muted-foreground">
-            🔗 分享功能即将上线
-          </div>
+          <ShareTab
+            tripId={trip.id}
+            shares={trip.shares}
+            onRefresh={refreshTrip}
+          />
         </TabsContent>
       </Tabs>
     </div>
