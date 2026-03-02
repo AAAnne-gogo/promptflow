@@ -18,15 +18,15 @@ export default async function HomePage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold">我的旅行</h1>
-          <p className="text-muted-foreground mt-1">
+          <h1 className="text-2xl sm:text-3xl font-bold">我的旅行</h1>
+          <p className="text-muted-foreground mt-1 text-sm sm:text-base">
             规划你的每一次精彩旅程
           </p>
         </div>
         <Link href="/trips/new">
-          <Button size="lg">
+          <Button size="lg" className="w-full sm:w-auto">
             <span className="mr-2">✈️</span>
             创建旅行
           </Button>

@@ -151,7 +151,7 @@ export function TripDetail({ trip: initialTrip }: TripDetailProps) {
   return (
     <div>
       {/* Trip Header */}
-      <div className="flex items-start justify-between mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-6">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <Button
@@ -162,8 +162,8 @@ export function TripDetail({ trip: initialTrip }: TripDetailProps) {
               ← 返回
             </Button>
           </div>
-          <h1 className="text-3xl font-bold">{trip.title}</h1>
-          <div className="flex items-center gap-4 mt-2 text-muted-foreground">
+          <h1 className="text-2xl sm:text-3xl font-bold">{trip.title}</h1>
+          <div className="flex flex-wrap items-center gap-2 sm:gap-4 mt-2 text-sm sm:text-base text-muted-foreground">
             <span>📍 {trip.destination}</span>
             <span>
               📅 {format(startDate, "M月d日", { locale: zhCN })} -{" "}
@@ -172,7 +172,7 @@ export function TripDetail({ trip: initialTrip }: TripDetailProps) {
             <span>({days.length}天)</span>
           </div>
           {trip.budget && (
-            <div className="flex items-center gap-2 mt-1">
+            <div className="flex flex-wrap items-center gap-2 mt-2">
               <Badge variant="outline">
                 💰 预算 ¥{trip.budget.toLocaleString()}
               </Badge>
