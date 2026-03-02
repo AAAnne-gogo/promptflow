@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Trip {
+  id          String    @id @default(cuid())
+  title       String
+  destination String
+  startDate   DateTime
+  endDate     DateTime
+  coverImage  String?
+  budget      Float?
+  currency    String    @default("CNY")
+  notes       String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  items    TripItem[]
+  expenses Expense[]
+  shares   Share[]
+}
+
+model TripItem {
+  id        String   @id @default(cuid())
+  tripId    String
+  trip      Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  type      String   // flight | hotel | restaurant | shop | attraction | transport | note
+  date      DateTime
+  startTime String?  // HH:mm
+  endTime   String?  // HH:mm
+  sortOrder Int      @default(0)
+
+  // Common fields
+  title    String
+  address  String?
+  notes    String?
+  cost     Float?
+  currency String   @default("CNY")
+
+  // Type-specific JSON data
+  metadata String? // JSON string for type-specific fields
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  expenses Expense[]
+}
+
+model Expense {
+  id     String    @id @default(cuid())
+  tripId String
+  trip   Trip      @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  itemId String?
+  item   TripItem? @relation(fields: [itemId], references: [id], onDelete: SetNull)
+
+  category    String // transport | accommodation | food | shopping | attraction | other
+  amount      Float
+  currency    String   @default("CNY")
+  description String?
+  paidBy      String?
+  date        DateTime
+  createdAt   DateTime @default(now())
+}
+
+model Share {
+  id        String    @id @default(cuid())
+  tripId    String
+  trip      Trip      @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  code      String    @unique @default(cuid())
+  password  String?
+  expiresAt DateTime?
+  createdAt DateTime  @default(now())
+}
